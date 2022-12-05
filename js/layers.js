@@ -6,15 +6,17 @@ addLayer("p", {
         unlocked: true,
 		points: new Decimal(0),
     }},
-    color: "#4BDC13",
+    color: "red",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "prestige points", // Name of prestige currency
-    baseResource: "points", // Name of resource prestige is based on
+    resource: "prestige leaves", // Name of prestige currency
+    baseResource: "big leaves", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.5, // Prestige currency exponent
+    
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasUpgrade('p', 13)) mult = mult.times(upgradeEffect('p', 13))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -24,5 +26,33 @@ addLayer("p", {
     hotkeys: [
         {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+
+    upgrades: {
+        11: {
+            title: "I'm a title!",
+            description: "Double your point gain.",
+            cost: new Decimal(1),
+
+        },
+        12: {
+            title: "I'm a better title thanks.",
+            description: "Increase your Leaf gain but better.",
+            cost: new Decimal(2),
+            effect() {
+                return player[this.layer].points.add(1).pow(0.5)
+            },
+            effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+        },
+        13: {
+            title: "I'm not a title.",
+            description: "Increase.",
+            cost: new Decimal(3),
+            effect() {
+                return player.points.add(1).pow(0.15)
+            },
+        }
+        
+
+    },
     layerShown(){return true}
 })

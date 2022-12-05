@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "The Alice Tree",
-	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	name: "The Growing Tree",
+	id: "AtlasTree",
+	author: "Alice",
+	pointsName: "Leaves",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "+1",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -43,6 +43,10 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	if (hasUpgrade('p', 11)) gain = gain.times(2)
+	
+	if (hasUpgrade('p', 12)) gain = gain.times(upgradeEffect('p', 12))
+
 	return gain
 }
 
